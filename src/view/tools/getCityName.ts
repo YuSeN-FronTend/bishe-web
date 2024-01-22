@@ -8,6 +8,7 @@ function getCityName(cityArr: any) {
                 if(cityArr[1] === item2.value) {
                     result.push(item2.label);
                     if(Object.values(provAndCity[index1].children[index2]).length === 3) {
+                        // @ts-ignore
                         provAndCity[index1].children[index2].children.forEach((item3: any) => {
                             if(cityArr[2] === item3.value) {
                                 result.push(item3.label);

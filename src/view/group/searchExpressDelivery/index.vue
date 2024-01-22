@@ -13,14 +13,14 @@
                 <div class="sedc-data" v-for="item in waybillArr" :key="item.id">
                     <div class="sedcd-left">
                         <div class="sedcdl-left">
-                            <div class="one">运单号 {{ item.trackNumber }}</div>
+                            <div class="one">运单号 {{ item.trackNumber }} <button class="one-btn" @click="handleCopy(item.trackNumber)">复制</button></div>
                             <div class="two">{{ item.sendLocation[item.sendLocation.length - 2] }}</div>
                             <div class="three">{{ item.sendName }}</div>
                         </div>
                         <div class="sedcdl-center">
                             <img
                                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAKCAYAAADGmhxQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAE4SURBVHgBzVPbbcMwDJT8UAB/JRO0K/S3Xx2hK3iDeIKO4KKfttGiixXoBh3AtnonkAKjBRwCAinxRJ6OkHN3bt4dZOM4nruu+/HeX7Ai7Ldt26e+7/8srnIH2TAMJPLBGOQo1OO6rm8l7jCCtBDCO1xWDESv8zy/WMyhBGWc3xhx2suov2BnxTTTND0jEZA4VVWVPPf7vgc9p9cYd1os+kAv5xnHc8Hd3CcG/iTYFEuN/A84atiDjHrgWVIQxDIIMV+RkCBZfqJIiJcnI59W2aRUSjDMUSWnipk7NqaM12VZXjNBFIh1XSfUtm0skLQum5BwFDMPSnXplZwlwFKCSefmatQ8Yztmxuj1yVFXTdM4IeYhrfOmOtU0jbw20pcW+yjNNM44Pq4gpyVzrDlRkJsLOI3u3u0fhHXKQMU1lnYAAAAASUVORK5CYII=">
-                            <div class="good">已签收</div>
+                            <div class="good">{{ item.companyName }}</div>
                         </div>
                         <div class="sedcdl-right">
                             <div class="one">签收时间 {{ item.orderTime }}</div>
@@ -46,7 +46,8 @@
 import { reactive, ref } from 'vue';
 import { searchWaybill } from '../../../api/expressDelivery'
 import { ElMessage } from 'element-plus';
-import getCityName from '../../tools/getCityName'
+import getCityName from '../../tools/getCityName';
+import handleCopy from '../../tools/handleCopy';
 let accountInfo: any = sessionStorage.getItem('accountInfo');
 const params = {
     phone: JSON.parse(accountInfo).phone,
@@ -122,6 +123,20 @@ function tabChange() {
                         .one {
                             font-size: 17px;
                             margin-bottom: 15px;
+                            display: flex;
+                            align-items: center;
+                            &-btn {
+                                border: 1px solid #dcdee0;
+                                background-color: #fff;
+                                border-radius: 5px;
+                                margin-left: 15px;
+                                font-size: 12px;
+                                cursor: pointer;
+                                padding: 1px 7px;
+                            }
+                            &-btn:hover {
+                                color: $primary-color;
+                            }
                         }
 
                         .two {
@@ -138,7 +153,9 @@ function tabChange() {
                     }
 
                     .sedcdl-center {
+                        width: 70px;
                         .good {
+                        margin-left: 5px;
                             font-size: 14px;
                             color: $primary-color;
                         }
