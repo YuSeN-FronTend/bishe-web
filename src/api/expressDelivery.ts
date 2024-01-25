@@ -24,3 +24,19 @@ export function searchWaybill(data:any) {
         data
     })
 }
+// 运单评分
+export function setRate(data: any) {
+    return request({
+        url:"/expressDelivery/setRate",
+        method: 'post',
+        data
+    })
+}
+// 删除运单
+export function deleteWaybill(params: any) {
+    return request({
+        url: "/expressDelivery/deleteWaybill",
+        method: 'delete',
+        params
+    })
+}

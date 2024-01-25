@@ -2,9 +2,10 @@
     <div class="searchExpressDelivery">
         <div class="sed">
             <div class="sed-header">
-
+                <el-input v-model="searchInput" placeholder="请按运单号进行查询" />
+                <button class="sh-btn">查询</button>
             </div>
-            <div class="sed-content">
+            <div class="sed-content" v-loading="loading">
                 <div class="sedc-tab"><el-tabs v-model="activeName" class="demo-tabs" @tab-change="tabChange">
                         <el-tab-pane label="我寄的" name="mySend"></el-tab-pane>
                         <el-tab-pane label="我收的" name="myPutaway"></el-tab-pane>
@@ -13,7 +14,8 @@
                 <div class="sedc-data" v-for="item in waybillArr" :key="item.id">
                     <div class="sedcd-left">
                         <div class="sedcdl-left">
-                            <div class="one">运单号 {{ item.trackNumber }} <button class="one-btn" @click="handleCopy(item.trackNumber)">复制</button></div>
+                            <div class="one">运单号 {{ item.trackNumber }} <button class="one-btn"
+                                    @click="handleCopy(item.trackNumber)">复制</button></div>
                             <div class="two">{{ item.sendLocation[item.sendLocation.length - 2] }}</div>
                             <div class="three">{{ item.sendName }}</div>
                         </div>
@@ -29,42 +31,98 @@
                         </div>
                     </div>
                     <div class="sedcd-right">
-                        <el-icon>
+                        <el-icon @click="clickDelDialog(item.id)">
                             <Icon icon="Delete"></Icon>
                         </el-icon>
-                        <el-icon>
-                            <Icon icon="Star"></Icon>
-                        </el-icon>
+                        <el-popover placement="top" :title="'评价' + item.companyName" :width="150" trigger="click"
+                            @before-enter="showPopover(item.rate)" :hide-after="0">
+                            <template #reference>
+                                <el-icon>
+                                    <Icon icon="Star"></Icon>
+                                </el-icon>
+                            </template>
+                            <div style="display: flex;justify-content: center;">
+                                <el-rate v-model="rate" :colors="colors" allow-half @change="rateChange(item.id)" />
+                            </div>
+                        </el-popover>
                     </div>
+                </div>
+                <div style="margin-top: 30px;margin-bottom: 20px;">
+                    <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :teleported="false"
+                        :page-sizes="[5, 10, 20, 50]" :small="false" layout="total, sizes, prev, pager, next, jumper"
+                        :background="true"
+                        :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
                 </div>
             </div>
         </div>
+        <el-dialog v-model="clickDialog" width="25%" align-center>
+            <template #title>
+                <div style="font-size: 20px; font-weight: 600;">
+                    温馨提示
+                </div>
+            </template>
+            <div style="text-align: center; font-weight: 600;">
+                是否删除订单？
+            </div>
+            <template #footer>
+                <div class="dialog-footer">
+                    <button @click="clickDialog = false">取消</button>
+                    <button @click="confirmDelete">确定</button>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import { searchWaybill } from '../../../api/expressDelivery'
+import { searchWaybill, setRate, deleteWaybill } from '../../../api/expressDelivery'
 import { ElMessage } from 'element-plus';
 import getCityName from '../../tools/getCityName';
 import handleCopy from '../../tools/handleCopy';
+const waybillArr: any = reactive([]);
+let loading = ref<Boolean>(false);
 let accountInfo: any = sessionStorage.getItem('accountInfo');
-const params = {
-    phone: JSON.parse(accountInfo).phone,
-    type: 'sendPhone'
+// 分页
+let currentPage = ref(1);
+let pageSize = ref(5);
+const total = ref(0);
+// 首页传参
+function handleSizeChange(page: any) {
+    loading.value = true;
+    pageSize.value = page;
+    getWaybillData()
 }
-const waybillArr:any = reactive([]);
-async function getWaybillData(params: any) {
-
+function handleCurrentChange(current:any) {
+    loading.value = true;
+    currentPage.value = current;
+    getWaybillData()
+}
+// 搜索框
+let searchInput: any = ref('');
+// 获取订单数据
+async function getWaybillData() {
+    const params = {
+    phone: JSON.parse(accountInfo).phone,
+    type: 'sendPhone',
+    currentPage: currentPage.value,
+    pageSize: pageSize.value
+    }
+    // if(waybillArr.length) {
+    //     waybillArr.length = 0;
+    // }
     try {
         const { data } = await searchWaybill(params);
-        if(data.code === 200) {
-            data.data.forEach((item:any) => {
+        if (data.code === 200) {
+            total.value = data.data.total;
+            waybillArr.length = data.data.list.length;
+            data.data.list.forEach((item: any, index: any) => {
                 item.sendLocation = getCityName(item.sendLocation)
-                item.receiveLocation = getCityName(item.receiveLocation)
-                waybillArr.push(item);
+                item.receiveLocation = getCityName(item.receiveLocation);
+                waybillArr.splice(index, 1, item);
             })
         }
+        loading.value = false;
     } catch (error) {
         console.log(error);
         ElMessage({
@@ -73,11 +131,88 @@ async function getWaybillData(params: any) {
         })
     }
 }
-getWaybillData(params);
+getWaybillData();
 let activeName: any = ref('mySend');
 
 function tabChange() {
 
+}
+// 弹出框声明
+let clickDialog = ref<Boolean>(false);
+// 删除订单
+let waybillId: any = ref(0);
+// 触发弹框
+function clickDelDialog(id: any) {
+    waybillId.value = id;
+    clickDialog.value = true;
+}
+// 确定删除
+async function confirmDelete() {
+    console.log(waybillId.value);
+    const params = {
+        id: waybillId.value
+    }
+    try {
+        const { data } = await deleteWaybill(params);
+        if (data.code === 200) {
+            ElMessage({
+                message: data.msg,
+                type: 'success'
+            })
+            getWaybillData();
+        } else {
+            ElMessage({
+                message: data.msg,
+                type: 'warning'
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        ElMessage({
+            message: '系统出错！',
+            type: 'error'
+        })
+    }
+
+    clickDialog.value = false
+}
+// 弹窗评分
+const rate: any = ref(0)
+const colors = ref(['#7f8c8d', '#f1c40f', '#fa8231']) // same as { 2: '#99A9BF', 4: { value: '#F7BA2A', excluded: true }, 5: '#FF9900' }\
+async function rateChange(id: any) {
+    const params = {
+        id,
+        rate: rate.value
+    }
+    try {
+        const { data } = await setRate(params);
+        if (data.code === 200) {
+            ElMessage({
+                message: data.msg,
+                type: 'success'
+            })
+            loading.value = true;
+            getWaybillData();
+        } else {
+            ElMessage({
+                message: '评价失败！',
+                type: 'warning'
+            })
+        }
+
+    } catch (error) {
+        console.log(error);
+        ElMessage({
+            message: '系统出现错误',
+            type: 'error'
+        })
+    }
+}
+// 弹窗
+let closePopover = ref<Boolean>(false);
+function showPopover(itemRate: any) {
+    closePopover.value = true;
+    rate.value = parseFloat(itemRate);
 }
 </script>
 <style lang="scss" scoped>
@@ -92,10 +227,30 @@ function tabChange() {
         width: 68%;
 
         &-header {
-            height: 100px;
             background-color: #fff;
             border-radius: 10px;
             margin-bottom: 20px;
+            display: flex;
+            padding: 20px;
+
+            .sh-btn {
+                margin-left: 10px;
+                width: 180px;
+                border: none;
+                border-radius: 5px;
+                background-color: $primary-color;
+                color: #fff;
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+            .sh-btn:hover {
+                background-color: #fa8131db;
+            }
+
+            :deep(.el-input) {
+                height: 45px;
+            }
         }
 
         &-content {
@@ -109,6 +264,7 @@ function tabChange() {
                 display: flex;
                 justify-content: space-between;
                 padding-top: 15px;
+
                 .sedcd-left {
                     width: 63%;
                     display: flex;
@@ -125,6 +281,7 @@ function tabChange() {
                             margin-bottom: 15px;
                             display: flex;
                             align-items: center;
+
                             &-btn {
                                 border: 1px solid #dcdee0;
                                 background-color: #fff;
@@ -134,6 +291,7 @@ function tabChange() {
                                 cursor: pointer;
                                 padding: 1px 7px;
                             }
+
                             &-btn:hover {
                                 color: $primary-color;
                             }
@@ -153,9 +311,10 @@ function tabChange() {
                     }
 
                     .sedcdl-center {
-                        width: 70px;
+                        width: 85px;
+
                         .good {
-                        margin-left: 5px;
+                            margin-left: 5px;
                             font-size: 14px;
                             color: $primary-color;
                         }
@@ -203,6 +362,30 @@ function tabChange() {
             }
         }
     }
+
+    .dialog-footer {
+        display: flex;
+        justify-content: center;
+
+        button {
+            border: none;
+            padding: 8px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:nth-child(1) {
+            margin-right: 5px;
+            background-color: #fff;
+            border: 1px solid #efefef;
+        }
+
+        button:nth-child(2) {
+            margin-left: 5px;
+            color: #fff;
+            background-color: $primary-color;
+        }
+    }
 }
 
 :deep(.el-tabs__nav-scroll) {
@@ -244,10 +427,6 @@ function tabChange() {
     border-color: $primary-color;
 }
 
-:deep(.el-input) {
-    height: 45px;
-}
-
 :deep(.el-input__wrapper.is-focus) {
     box-shadow: none;
 }
@@ -255,4 +434,31 @@ function tabChange() {
 :deep(.el-input__wrapper) {
     box-shadow: none;
     background-color: #f7f8fa;
-}</style>
+}
+// 分页
+
+:deep(.el-pager li.is-active) {
+    color: $primary-color;
+}
+:deep(.el-pager li:hover) {
+    color: $primary-color;
+}
+:deep(.el-pagination button:hover) {
+    color: $primary-color;
+}
+:deep(.el-select:hover:not(.el-select--disabled) .el-input__wrapper){
+    box-shadow: 0 0 0 1px $primary-color inset;
+}
+:deep(.el-select .el-input.is-focus .el-input__wrapper) {
+    box-shadow: 0 0 0 1px $primary-color inset !important;
+}
+:deep(.el-select .el-input__wrapper.is-focus) {
+    box-shadow: 0 0 0 1px $primary-color inset !important;
+}
+:deep(.el-select-dropdown__item.selected) {
+    color: $primary-color;
+}
+:deep(.el-pagination.is-background .el-pager li.is-active) {
+    background-color: $primary-color;
+}
+</style>
