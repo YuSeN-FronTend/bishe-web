@@ -40,3 +40,11 @@ export function deleteWaybill(params: any) {
         params
     })
 }
+// 根据订单号查询订单
+export function trackOrder(params: any) {
+    return request({
+        url: "/expressDelivery/trackOrder",
+        method: 'get',
+        params
+    })
+}
