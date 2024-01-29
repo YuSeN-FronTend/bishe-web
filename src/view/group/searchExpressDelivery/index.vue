@@ -102,66 +102,71 @@
                     </div>
                 </div>
                 <div class="electronicStub" v-else-if="activeOrder === 'electronicStub'">
-                    <div class="es-top">
-                        <div class="etop-left">
-                            <div class="el-top">
-                                <div class="et-left">
-                                    寄
+                    <div id="orderInfo" ref="chartRef">
+                        <div class="es-top">
+                            <div class="etop-left">
+                                <div class="el-top">
+                                    <div class="et-left">
+                                        寄
+                                    </div>
+                                    <div class="et-right">
+                                        <div style="font-weight: 500;">{{ orderInfoObj.sendName }}</div>
+                                        <div style="font-size: 14px;">{{ orderInfoObj.sendPhone }}</div>
+                                    </div>
                                 </div>
-                                <div class="et-right">
-                                    <div style="font-weight: 500;">{{ orderInfoObj.sendName }}</div>
-                                    <div style="font-size: 14px;">{{ orderInfoObj.sendPhone }}</div>
+                                <div class="el-bottom">
+                                    <div class="eb-left">
+                                        收
+                                    </div>
+                                    <div class="eb-right">
+                                        <div style="font-weight: 500;">{{ orderInfoObj.receiveName }}</div>
+                                        <div style="font-size: 14px;">{{ orderInfoObj.receivePhone }}</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="el-bottom">
-                                <div class="eb-left">
-                                    收
-                                </div>
-                                <div class="eb-right">
-                                    <div style="font-weight: 500;">{{ orderInfoObj.receiveName }}</div>
-                                    <div style="font-size: 14px;">{{ orderInfoObj.receivePhone }}</div>
-                                </div>
+                            <div class="etop-dash"></div>
+                            <div class="etop-center">
+                                <div class="ec-top">{{ orderInfoObj.sendLocation[0] + orderInfoObj.sendLocation[1] +
+                                    (orderInfoObj.sendLocation[2] || '') + orderInfoObj.sendAddress }}</div>
+                                <div class="ec-bottom">{{ orderInfoObj.receiveLocation[0] + orderInfoObj.receiveLocation[1]
+                                    +
+                                    (orderInfoObj.receiveLocation[2] || '') + orderInfoObj.receiveAddress }}</div>
+                            </div>
+                            <div class="etop-right">
+                                <img :src="imageSrc" @load="handleImageLoad">
                             </div>
                         </div>
-                        <div class="etop-dash"></div>
-                        <div class="etop-center">
-                            <div class="ec-top">{{ orderInfoObj.sendLocation[0] + orderInfoObj.sendLocation[1] +
-                                (orderInfoObj.sendLocation[2] || '') + orderInfoObj.sendAddress }}</div>
-                            <div class="ec-bottom">{{ orderInfoObj.receiveLocation[0] + orderInfoObj.receiveLocation[1] +
-                                (orderInfoObj.receiveLocation[2] || '') + orderInfoObj.receiveAddress }}</div>
-                        </div>
-                        <div class="etop-right">
-                            <img :src="imageSrc" @load="handleImageLoad">
-                        </div>
-                    </div>
-                    <div class="es-center">
-                        <div class="ec-left">
-                            <div><span class="topText">托寄物： </span>{{ orderInfoObj.goodsName }}</div>
-                            <div><span class="topText">数量： </span>{{ orderInfoObj.goodsCount }}</div>
-                            <div><span class="topText">实际重量： </span>{{ orderInfoObj.goodsWeight }}kg</div>
-                            <div><span class="topText">计费重量： </span>{{ orderInfoObj.goodsWeight }}kg</div>
-                            <div><span class="topText">保价金额： </span>{{ orderInfoObj.totalPrice * 20 }}</div>
-                            <div><span class="topText">税费： </span>CNY {{ orderInfoObj.totalPrice * 0.02 }}</div>
-                            <div><span class="topText">备注： </span>{{ orderInfoObj.remark }}</div>
-                        </div>
-                        <div class="ec-right">
-                            <div><span class="topText">产品类型： </span>{{ orderInfoObj.companyName }}</div>
-                            <div><span class="topText">付款方式： </span>{{ orderInfoObj.moneyApplyRadio === 'send' ? '寄付现结' :
-                                '到付' }}</div>
-                            <div><span class="topText">件数： </span>{{ orderInfoObj.goodsCount }}.0</div>
-                            <div><span class="topText">运费： </span>CNY {{ orderInfoObj.totalPrice }}</div>
-                            <div><span class="topText">保价费用： </span>{{ Math.trunc(orderInfoObj.totalPrice * 0.05) }}</div>
-                            <div><span class="topText">费用合计： </span>CNY {{ orderInfoObj.totalPrice +
-                                Math.trunc(orderInfoObj.totalPrice * 0.05) }}</div>
+                        <div class="es-center">
+                            <div class="ec-left">
+                                <div><span class="topText">托寄物： </span>{{ orderInfoObj.goodsName }}</div>
+                                <div><span class="topText">数量： </span>{{ orderInfoObj.goodsCount }}</div>
+                                <div><span class="topText">实际重量： </span>{{ orderInfoObj.goodsWeight }}kg</div>
+                                <div><span class="topText">计费重量： </span>{{ orderInfoObj.goodsWeight }}kg</div>
+                                <div><span class="topText">保价金额： </span>{{ orderInfoObj.totalPrice * 20 }}</div>
+                                <div><span class="topText">税费： </span>CNY {{ orderInfoObj.totalPrice * 0.02 }}</div>
+                                <div><span class="topText">备注： </span>{{ orderInfoObj.remark }}</div>
+                            </div>
+                            <div class="ec-right">
+                                <div><span class="topText">产品类型： </span>{{ orderInfoObj.companyName }}</div>
+                                <div><span class="topText">付款方式： </span>{{ orderInfoObj.moneyApplyRadio === 'send' ? '寄付现结'
+                                    :
+                                    '到付' }}</div>
+                                <div><span class="topText">件数： </span>{{ orderInfoObj.goodsCount }}.0</div>
+                                <div><span class="topText">运费： </span>CNY {{ orderInfoObj.totalPrice }}</div>
+                                <div><span class="topText">保价费用： </span>{{ Math.trunc(orderInfoObj.totalPrice * 0.05) }}
+                                </div>
+                                <div><span class="topText">费用合计： </span>CNY {{ orderInfoObj.totalPrice +
+                                    Math.trunc(orderInfoObj.totalPrice * 0.05) }}</div>
+                            </div>
                         </div>
                     </div>
                     <div class="es-bottom">
-                        <button>
+                        <button @click="handelChangeTime">
                             <el-icon>
                                 <Icon icon="Download"></Icon>
                             </el-icon>
                             下载</button>
-                        <button>
+                        <button v-print="print">
                             <el-icon>
                                 <Icon icon="Printer"></Icon>
                             </el-icon>
@@ -195,6 +200,8 @@ import { searchWaybill, setRate, deleteWaybill, trackOrder } from '../../../api/
 import { ElMessage } from 'element-plus';
 import getCityName from '../../tools/getCityName';
 import handleCopy from '../../tools/handleCopy';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 const waybillArr: any = reactive([]);
 let loading = ref<Boolean>(false);
 let accountInfo: any = sessionStorage.getItem('accountInfo');
@@ -394,6 +401,35 @@ async function searchOrder() {
 let imageSrc = ref('/src/assets/tiaoxingma.png');
 function handleImageLoad() {
     imageSrc.value = `https://bwipjs-api.metafloor.com/?bcid=code128&text=${orderInfoObj.value.trackNumber}&includetext=true&textsize=11&height=11`
+}
+
+// 打印
+const print = {
+    id: 'orderInfo',
+    popTitle: '订单追踪'
+}
+
+// 生成pdf文件
+const chartRef = ref();
+const handelChangeTime = () => {
+  
+  // 将元素转换为canvas对象
+  html2canvas(chartRef.value, {
+    x: -30,
+    y: -10,
+    useCORS: true
+  }).then((canvas) => {
+    // 将canvas对象转换为图像
+    const imgData = canvas.toDataURL('image/png')
+    const pdf = new jsPDF()
+    const imgProps = pdf.getImageProperties(imgData)
+    const pdfWidth = pdf.internal.pageSize.getWidth()
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
+    // 将图像添加到PDF文件中
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
+       // 保存PDF文件
+    pdf.save(`电子存根_${orderInfoObj.value.trackNumber}.pdf`);
+  })
 }
 </script>
 <style lang="scss" scoped>
@@ -684,7 +720,7 @@ function handleImageLoad() {
                         border-left: 1px dashed #000000;
                         position: absolute;
                         top: 56px;
-                        left: 13px;
+                        left: 18px;
                     }
 
                     .etop-center {
@@ -726,6 +762,7 @@ function handleImageLoad() {
                 .es-bottom {
                     margin-top: 20px;
                     display: flex;
+
                     button {
                         border: 1px solid #dcdee0;
                         background-color: #fff;
@@ -736,7 +773,8 @@ function handleImageLoad() {
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        .el-icon{
+
+                        .el-icon {
                             font-size: 16px;
                             margin-right: 8px;
                         }
@@ -855,4 +893,96 @@ function handleImageLoad() {
 
 :deep(.el-pagination.is-background .el-pager li.is-active) {
     background-color: $primary-color;
+}
+// 打印部分样式
+.es-top {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    border-bottom: 1px solid #ebedee;
+    padding-bottom: 40px;
+
+    .etop-left {
+        .el-top {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 25px;
+
+            .et-left {
+                margin-left: 5px;
+                height: 28px;
+                width: 28px;
+                color: #fff;
+                box-shadow: 0 0 5px 2px #ebedee;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-right: 20px;
+            }
+        }
+
+        .el-bottom {
+            display: flex;
+            align-items: center;
+
+            .eb-left {
+                margin-left: 5px;
+                height: 28px;
+                width: 28px;
+                box-shadow: 0 0 5px 2px #ebedee;
+                background-color: $primary-color;
+                color: #fff;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-right: 20px;
+            }
+        }
+    }
+
+    .etop-dash {
+        height: 38px;
+        border-left: 1px dashed #000000;
+        position: absolute;
+        top: 56px;
+        left: 18px;
+    }
+
+    .etop-center {
+        .ec-top {
+            margin-top: 30px;
+            margin-bottom: 50px;
+            font-size: 14px;
+        }
+
+        .ec-bottom {
+            font-size: 14px;
+        }
+    }
+
+    .etop-right {
+        width: 246px;
+        margin: 35px 30px 0 10px;
+    }
+}
+
+.es-center {
+    display: flex;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ebedee;
+    font-size: 14px;
+
+    .ec-left {
+        margin-right: 50px;
+    }
+
+    .topText {
+        color: #8E8E8E;
+        display: inline-block;
+        margin-bottom: 3px;
+    }
 }</style>

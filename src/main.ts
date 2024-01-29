@@ -8,10 +8,11 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import * as Icons from '@element-plus/icons'
 import navAside from './components/layout/navAside/index.vue'
 import { generateRoutesFromMenu } from './router/getRoutes'
+import print from 'vue3-print-nb'
 const app = createApp(App);
 app.component('navAside', navAside)
 app.use(createPinia())
-
+app.use(print);
 let menu = JSON.parse(String(sessionStorage.getItem('userInfo')))?.routeInfo
 generateRoutesFromMenu(menu)?.forEach((item: any) => {
     router.addRoute(item)
