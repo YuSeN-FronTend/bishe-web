@@ -56,6 +56,9 @@
                 <el-empty description="暂无运单信息" v-if="!total" />
             </div>
             <div v-else class="sed-search">
+                <div class="seds-map">
+                    <Map :sendLocation="orderInfoObj.sendLocation" :receiveLocation="orderInfoObj.receiveLocation"></Map>
+                </div>
                 <div class="seds-tab"><el-tabs v-model="activeOrder" class="demo-tabs">
                         <el-tab-pane label="运单信息" name="orderInfo"></el-tab-pane>
                         <el-tab-pane label="电子存根" name="electronicStub"></el-tab-pane>
@@ -64,11 +67,11 @@
                 <div class="orderInfo" v-if="activeOrder === 'orderInfo'">
                     <div class="orderInfo-top">
                         <div class="ot-title">
-                            <div>天津市</div>
+                            <div>{{ orderInfoObj.sendLocation[0] }}</div>
                             <div><img
                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAKCAYAAADGmhxQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAE4SURBVHgBzVPbbcMwDJT8UAB/JRO0K/S3Xx2hK3iDeIKO4KKfttGiixXoBh3AtnonkAKjBRwCAinxRJ6OkHN3bt4dZOM4nruu+/HeX7Ai7Ldt26e+7/8srnIH2TAMJPLBGOQo1OO6rm8l7jCCtBDCO1xWDESv8zy/WMyhBGWc3xhx2suov2BnxTTTND0jEZA4VVWVPPf7vgc9p9cYd1os+kAv5xnHc8Hd3CcG/iTYFEuN/A84atiDjHrgWVIQxDIIMV+RkCBZfqJIiJcnI59W2aRUSjDMUSWnipk7NqaM12VZXjNBFIh1XSfUtm0skLQum5BwFDMPSnXplZwlwFKCSefmatQ8Yztmxuj1yVFXTdM4IeYhrfOmOtU0jbw20pcW+yjNNM44Pq4gpyVzrDlRkJsLOI3u3u0fhHXKQMU1lnYAAAAASUVORK5CYII=">
                             </div>
-                            <div>北京市</div>
+                            <div>{{ orderInfoObj.receiveLocation[0] }}</div>
                         </div>
                     </div>
                     <div class="orderInfo-bottom">
@@ -202,6 +205,7 @@ import getCityName from '../../tools/getCityName';
 import handleCopy from '../../tools/handleCopy';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import Map from './map/index.vue';
 const waybillArr: any = reactive([]);
 let loading = ref<Boolean>(false);
 let accountInfo: any = sessionStorage.getItem('accountInfo');
@@ -583,7 +587,11 @@ const handelChangeTime = () => {
             background-color: #fff;
             border-radius: 10px;
             padding: 20px 30px;
-
+            .seds-map {
+                margin-bottom: 25px;
+                height: 600px;
+                width: 100%;
+            }
             .orderInfo {
                 .orderInfo-top {
                     border-bottom: 1px solid #ebedee;
