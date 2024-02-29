@@ -4,7 +4,7 @@
             <transitionTitle :transtion-title="'2023年最受欢迎的快递公司汇总'" :transition-id="'one'"/>
         </div>
         <div class="echarts-box">
-            <pie />
+            <bar />
         </div>
     </div>
     <div class="section">
@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import transitionTitle from '../../tools/transitionTitle.vue';
-import pie from './pie.vue'
+import bar from './bar.vue'
 import totalInfo from './totalInfo.vue'
 </script>
 <style lang="scss" scoped>

@@ -62,7 +62,7 @@
                 </div>
                 <div>
                     <el-radio-group v-model="companyName">
-                        <el-radio v-for="item in allCompany" :key="item.id" :label="item.name" size="large" border>{{
+                        <el-radio style="margin-bottom: 20px;" v-for="item in allCompany" :key="item.id" :label="item.name" size="large" border>{{
                             item.name }}</el-radio>
                     </el-radio-group>
                 </div>
@@ -147,18 +147,18 @@ import { getCompany, sendExpressDelivery } from '../../../api/expressDelivery'
 /**
  * 寄件
  */
-// let accountInfo:any = sessionStorage.getItem('accountInfo')
+let accountInfo:any = sessionStorage.getItem('accountInfo')
 const sendForm: any = reactive({
-    sendName: '',
-    sendPhone: '',
+    sendName: '于森',
+    sendPhone: '15822288644',
     sendLocation: null,
-    sendAddress: '',
+    sendAddress: '厚园',
 })
 const receiveForm: any = reactive({
-    receiveName: '',
-    receivePhone: '',
+    receiveName: '十一',
+    receivePhone: '15633605373',
     receiveLocation: null,
-    receiveAddress: '',
+    receiveAddress: '河北工程大学（新校区）',
 })
 // 寄收件人表单验证
 const rules: any = reactive({
@@ -193,7 +193,7 @@ const rules: any = reactive({
 })
 // 表单验证触发函数
 let judgeArr: any = reactive([]);
-let infoIsHave = ref<boolean>(false);
+let infoIsHave = ref<boolean>(true);
 function validate(key: any, judge: any) {
     if (judge) {
         if (judgeArr.indexOf(key) === -1) {
@@ -307,6 +307,7 @@ async function placeOrderFun() {
         remark: remark.value,
         totalPrice: totalPrice.value,
         moneyApplyRadio: moneyApplyRadio.value,
+        user_id: JSON.parse(accountInfo).id
     }
     try {
         const { data } = await sendExpressDelivery(params);
@@ -674,7 +675,7 @@ function pageScrollTop() {
 
 // 单选框
 :deep(.el-radio.el-radio--large) {
-    width: 160px;
+    width: 145px;
     height: 51px;
 }
 
