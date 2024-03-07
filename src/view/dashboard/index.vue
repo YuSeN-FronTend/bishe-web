@@ -29,7 +29,7 @@
                             </a>
                         </div>
                     </li>
-                    <li class="header-left-menu-nav" v-else-if="job === '企业'">我要寄件</li>
+                    <li class="header-left-menu-nav" v-else-if="job === '企业'" @click="router.push('/companySearch')">运单查询</li>
                     <!-- <li class="header-left-menu-nav">运费时效查询</li>
                     <li class="header-left-menu-nav">服务网点查询</li>
                     <li class="header-left-menu-nav">收寄范围查询</li> -->
@@ -71,8 +71,6 @@ function login() {
     dialog.value = true;
 }
 let accountInfo:any = sessionStorage.getItem('accountInfo');
-console.log(accountInfo);
-
 let username: any = ref(JSON.parse(accountInfo)?.name || JSON.parse(accountInfo)?.username);
 let job:any = ref(JSON.parse(accountInfo)?.job)
 const loginStatus = ref<boolean>(Boolean(username.value));

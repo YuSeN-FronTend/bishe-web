@@ -4,8 +4,32 @@
 
 <script setup lang="ts">
 import * as echarts from 'echarts';
-import { onMounted } from 'vue';
+import { onMounted, reactive } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
+import { getGoodsCount } from '../../../api/echartsApi';
+import { ElMessage } from 'element-plus';
+let huanData:any = reactive([]);
+async function getData() {
+    const { data } = await getGoodsCount();
+    if(data.code === 200) {
+        for(let key in data.data) {
+            huanData.push({
+                name: key,
+                value: data.data[key]
+            })
+        }
+        
+        
+    }else {
+        ElMessage({
+            message: '数据库错误',
+            type: 'warning'
+        })
+    }
+}
+getData();
+
+
 onMounted(() => {
     const huanEcharts = document.getElementById('huanEcharts');
     const { stop } = useIntersectionObserver(huanEcharts, ([{ isIntersecting }]: any) => {
@@ -13,24 +37,7 @@ onMounted(() => {
         if (isIntersecting) {
             let myCharts = echarts.init(huanEcharts);
 
-            let data = [
-                {
-                    name: "使用中资源量",
-                    value: 754,
-                },
-                {
-                    name: "维修中资源量",
-                    value: 611,
-                },
-                {
-                    name: "保养中资源量",
-                    value: 400,
-                },
-                {
-                    name: "已损坏资源量",
-                    value: 200,
-                },
-            ];
+            let data = huanData.splice(0,4);
             let arrName = getArrayValue(data, "name");
             let arrValue = getArrayValue(data, "value");
             let sumValue = eval(arrValue.join("+"));
@@ -125,7 +132,7 @@ onMounted(() => {
                             {
                                 value: 7.5,
                                 itemStyle: {
-                                    color: "rgb(3, 31, 62)",
+                                    color: "#ecf0f1",
                                     borderWidth: 0,
                                 },
                                 tooltip: {
@@ -188,10 +195,10 @@ onMounted(() => {
                     formatter: "{a}<br>{b}:{c}({d}%)",
                 },
                 color: [
-                    "rgb(24, 183, 142)",
-                    "rgb(1, 179, 238)",
-                    "rgb(22, 75, 205)",
-                    "rgb(52, 52, 176)",
+                    "#f6e58d",
+                    "#7bed9f",
+                    "#70a1ff",
+                    "#81ecec",
                 ],
                 grid: {
                     top: "16%",

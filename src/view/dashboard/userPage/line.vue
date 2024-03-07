@@ -4,10 +4,35 @@
 
 <script setup lang="ts">
 import * as echarts from 'echarts';
-import { onMounted } from 'vue';
+import { onMounted, reactive } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
-
-
+import { getSaleAmount } from '../../../api/echartsApi';
+import { ElMessage } from 'element-plus';
+let formCount:any = reactive({
+    shunfeng: [0,0,0,0,0,0],
+    jingdong: [0,0,0,0,0,0],
+    zhongguoyouzheng: [0,0,0,0,0,0],
+})
+async function getData() {
+    const { data } = await getSaleAmount();
+    if(data.code === 200) {
+        data.data.forEach((item:any) => {
+        if(item.companyName === '顺丰') {
+            formCount.shunfeng[parseInt(item.orderDate.split('-')[1])-1] += item.totalPrice;
+        } else if(item.companyName === '京东') {
+            formCount.jingdong[parseInt(item.orderDate.split('-')[1])-1] += item.totalPrice;
+        } else if(item.companyName === '中国邮政') {
+            formCount.zhongguoyouzheng[parseInt(item.orderDate.split('-')[1])-1] += item.totalPrice;
+        }
+    })
+    } else {
+        ElMessage({
+            message: '数据库错误',
+            type: 'warning'
+        })
+    }
+}
+getData();
 
 onMounted(() => { 
     const lineEcharts = document.getElementById('lineEcharts');
@@ -64,7 +89,7 @@ onMounted(() => {
                 xAxis: [
                     {
                         type: "category",
-                        data: ["北京", "上海", "广州", "深圳", "香港", "澳门", "台湾"],
+                        data: ["1月", "2月", "3月", "4月", "5月", "6月"],
                         axisLine: {
                             lineStyle: {
                                 color: "#DCE2E8",
@@ -164,34 +189,34 @@ onMounted(() => {
                             show: false,
                         },
                     },
-                    {
-                        type: "value",
-                        position: "right",
-                        axisTick: {
-                            show: false,
-                        },
-                        axisLabel: {
-                            textStyle: {
-                                color: "#556677",
-                            },
-                            formatter: "{value}",
-                        },
-                        axisLine: {
-                            show: true,
-                            lineStyle: {
-                                color: "#DCE2E8",
-                            },
-                        },
-                        splitLine: {
-                            show: false,
-                        },
-                    },
+                    // {
+                    //     type: "value",
+                    //     position: "right",
+                    //     axisTick: {
+                    //         show: false,
+                    //     },
+                    //     axisLabel: {
+                    //         textStyle: {
+                    //             color: "#556677",
+                    //         },
+                    //         formatter: "{value}",
+                    //     },
+                    //     axisLine: {
+                    //         show: true,
+                    //         lineStyle: {
+                    //             color: "#DCE2E8",
+                    //         },
+                    //     },
+                    //     splitLine: {
+                    //         show: false,
+                    //     },
+                    // },
                 ],
                 series: [
                     {
-                        name: "Adidas",
+                        name: "顺丰",
                         type: "line",
-                        data: [10, 10, 30, 12, 15, 3, 7],
+                        data: formCount.shunfeng,
                         symbolSize: 1,
                         symbol: "circle",
                         smooth: true,
@@ -221,9 +246,9 @@ onMounted(() => {
                         },
                     },
                     {
-                        name: "Nike",
+                        name: "京东",
                         type: "line",
-                        data: [5, 12, 11, 14, 25, 16, 10],
+                        data: formCount.jingdong,
                         symbolSize: 1,
                         symbol: "circle",
                         smooth: true,
@@ -253,11 +278,11 @@ onMounted(() => {
                         },
                     },
                     {
-                        name: "老北京布鞋",
+                        name: "中国邮政",
                         type: "line",
-                        data: [150, 120, 170, 140, 500, 160, 110],
+                        data: formCount.zhongguoyouzheng,
                         symbolSize: 1,
-                        yAxisIndex: 1,
+                        // yAxisIndex: 1,
                         symbol: "circle",
                         smooth: true,
                         showSymbol: false,

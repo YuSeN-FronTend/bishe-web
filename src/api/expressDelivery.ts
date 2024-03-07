@@ -24,6 +24,15 @@ export function searchWaybill(data:any) {
         data
     })
 }
+
+// 企业运单查询 
+export function companySearchWaybill(data:any) {
+    return request({
+        url: '/expressDelivery/companySearchWaybill',
+        method: 'post',
+        data
+    })
+}
 // 运单评分
 export function setRate(data: any) {
     return request({

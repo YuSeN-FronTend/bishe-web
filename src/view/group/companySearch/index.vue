@@ -6,11 +6,6 @@
                 <button class="sh-btn" @click="searchOrder">查询</button>
             </div>
             <div class="sed-content" v-loading="loading" v-if="isShow">
-                <div class="sedc-tab"><el-tabs v-model="activeName" class="demo-tabs" @tab-change="tabChange">
-                        <el-tab-pane label="我寄的" name="sendPhone"></el-tab-pane>
-                        <el-tab-pane label="我收的" name="receivePhone"></el-tab-pane>
-                    </el-tabs>
-                </div>
                 <div class="sedc-data" v-for="item in waybillArr" :key="item.id">
                     <div class="sedcd-left">
                         <div class="sedcdl-left">
@@ -199,21 +194,16 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import { searchWaybill, setRate, deleteWaybill, trackOrder } from '../../../api/expressDelivery'
+import { companySearchWaybill, setRate, deleteWaybill, trackOrder } from '../../../api/expressDelivery'
 import { ElMessage } from 'element-plus';
 import getCityName from '../../tools/getCityName';
 import handleCopy from '../../tools/handleCopy';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import Map from './map/index.vue';
+import Map from '../searchExpressDelivery/map/index.vue';
 const waybillArr: any = reactive([]);
 let loading = ref<Boolean>(false);
 let accountInfo: any = sessionStorage.getItem('accountInfo');
-let activeName: any = ref('sendPhone');
-
-function tabChange() {
-    getWaybillData()
-}
 // 分页
 let currentPage = ref(1);
 let pageSize = ref(5);
@@ -232,8 +222,7 @@ function handleCurrentChange(current: any) {
 // 获取订单数据
 async function getWaybillData() {
     const params = {
-        phone: JSON.parse(accountInfo).phone,
-        type: activeName.value,
+        companyName: JSON.parse(accountInfo).name,
         currentPage: currentPage.value,
         pageSize: pageSize.value
     }
@@ -241,7 +230,7 @@ async function getWaybillData() {
     //     waybillArr.length = 0;
     // }
     try {
-        const { data } = await searchWaybill(params);
+        const { data } = await companySearchWaybill(params);
         if (data.code === 200) {
             total.value = data.data.total;
             waybillArr.length = data.data.list.length;
@@ -251,6 +240,7 @@ async function getWaybillData() {
                 waybillArr.splice(index, 1, item);
             })
         }
+        console.log(waybillArr);
         
         loading.value = false;
     } catch (error) {
@@ -444,7 +434,7 @@ const handelChangeTime = () => {
     display: flex;
     align-items: center;
     flex-direction: column;
-
+    padding-bottom: 50px;
     .sed {
         width: 68%;
 
