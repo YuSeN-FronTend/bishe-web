@@ -22,14 +22,15 @@
                                     <Icon icon="TopRight"></Icon>
                                 </el-icon>
                             </a>
-                            <a href="#" class="nav2-atag">产品3
+                            <a href="#" class="nav2-atag" @click="router.push('/customerService')">客服中心
                                 <el-icon>
                                     <Icon icon="TopRight"></Icon>
                                 </el-icon>
                             </a>
                         </div>
                     </li>
-                    <li class="header-left-menu-nav" v-else-if="job === '企业'" @click="router.push('/companySearch')">运单查询</li>
+                    <li class="header-left-menu-nav" v-if="job === '企业'" @click="router.push('/companySearch')">运单查询</li>
+                    <li class="header-left-menu-nav" v-if="job === '企业'" @click="router.push('/customerService')">客服中心</li>
                     <!-- <li class="header-left-menu-nav">运费时效查询</li>
                     <li class="header-left-menu-nav">服务网点查询</li>
                     <li class="header-left-menu-nav">收寄范围查询</li> -->

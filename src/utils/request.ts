@@ -20,7 +20,7 @@ request.interceptors.response.use(
     (response) => {
         const res = response.data;
         if (res) {
-            console.log(res);
+            // console.log(res);
             // 这个是后台自定义的code哦，不是http里的状态码哦
             if (res.code !== 200) {
                 // 在这里处理异常，如res.code===50008 token失效重置token等等

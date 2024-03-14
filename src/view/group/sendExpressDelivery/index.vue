@@ -149,16 +149,16 @@ import { getCompany, sendExpressDelivery } from '../../../api/expressDelivery'
  */
 let accountInfo:any = sessionStorage.getItem('accountInfo')
 const sendForm: any = reactive({
-    sendName: '于森',
-    sendPhone: '15822288644',
+    sendName: '',
+    sendPhone: '',
     sendLocation: null,
-    sendAddress: '厚园',
+    sendAddress: '',
 })
 const receiveForm: any = reactive({
-    receiveName: '十一',
-    receivePhone: '15633605373',
+    receiveName: '',
+    receivePhone: '',
     receiveLocation: null,
-    receiveAddress: '河北工程大学（新校区）',
+    receiveAddress: '',
 })
 // 寄收件人表单验证
 const rules: any = reactive({
@@ -193,7 +193,7 @@ const rules: any = reactive({
 })
 // 表单验证触发函数
 let judgeArr: any = reactive([]);
-let infoIsHave = ref<boolean>(true);
+let infoIsHave = ref<boolean>(false);
 function validate(key: any, judge: any) {
     if (judge) {
         if (judgeArr.indexOf(key) === -1) {
