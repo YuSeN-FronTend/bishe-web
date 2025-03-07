@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="agreement"><el-checkbox v-model="agreement" size="large" />&nbsp;我已阅读并同意&nbsp; <span
-                    class="protocol">《顺丰速运隐私政策》</span>&nbsp;和&nbsp;<span class="protocol">《顺丰速运服务条款》</span></div>
+                    class="protocol">《隐私政策》</span>&nbsp;和&nbsp;<span class="protocol">《服务条款》</span></div>
         </div>
         <div v-else-if="activeName === 'userRegister'" class="loginPhone">
             <div class="loginPhone-input">
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="agreement"><el-checkbox v-model="agreement" size="large" />&nbsp;我已阅读并同意&nbsp; <span
-                    class="protocol">《顺丰速运隐私政策》</span>&nbsp;和&nbsp;<span class="protocol">《顺丰速运服务条款》</span></div>
+                    class="protocol">《隐私政策》</span>&nbsp;和&nbsp;<span class="protocol">《服务条款》</span></div>
         </div>
         <div v-else-if="activeName === 'companyRegister'" class="loginPhone">
             <div class="loginPhone-input">
@@ -120,7 +120,7 @@
                 </div>
             </div>
             <div class="agreement"><el-checkbox v-model="agreement" size="large" />&nbsp;我已阅读并同意&nbsp; <span
-                    class="protocol">《顺丰速运隐私政策》</span>&nbsp;和&nbsp;<span class="protocol">《顺丰速运服务条款》</span></div>
+                    class="protocol">《隐私政策》</span>&nbsp;和&nbsp;<span class="protocol">《服务条款》</span></div>
         </div>
     </el-dialog>
 </template>

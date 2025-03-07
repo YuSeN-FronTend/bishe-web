@@ -9,6 +9,7 @@ export function isToday(time:any) {
     currentDate.getDate() === targetDate.getDate()) {
         return `${targetDate.getHours()}:${addZero(targetDate.getMinutes())}`
     } else {
-        return `${targetDate.getFullYear()}-${addZero(targetDate.getMonth() + 1)}-${addZero(targetDate.getDate())}`
+        // ${targetDate.getFullYear()}-
+        return `${addZero(targetDate.getMonth() + 1)}-${addZero(targetDate.getDate())}`
     }
 }

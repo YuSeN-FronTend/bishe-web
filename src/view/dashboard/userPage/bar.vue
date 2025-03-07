@@ -19,8 +19,8 @@ async function getData() {
                 xArr.push(item);
             })
             Object.values(data.data).forEach((item:any) => {
-                maxYArr.push(item);
-                yArr.push(item * 0.8);
+                maxYArr.push(item * 872);
+                yArr.push(item * 872*  0.8);
             })
         }
     } catch (error) {
@@ -142,6 +142,7 @@ async function getData() {
                     yAxis: {
                         min: 0,
                         type: "value",
+                        name: '用户下单次数',
                         axisLine: {
                             show: true,
                             lineStyle: {

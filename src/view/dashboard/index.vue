@@ -3,7 +3,7 @@
         <div class="header" id="header">
             <div class="header-left">
                 <div class="header-left-logo">
-                    <img src="https://www.guanaitong.com/images/2023/public/logo.svg" class="image">
+                    <img src="../../assets/logo.png" class="image">
                 </div>
                 <ul class="header-left-menu">
                     <li class="header-left-menu-nav">首页</li>
@@ -200,7 +200,12 @@ function closeDialog(params: any) {
 
             &-logo {
                 margin: 0 20px;
-
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .image {
+                    height: 130px;
+                }
             }
         }
 

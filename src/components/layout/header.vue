@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <div class="header-img" @click="router.push('/dashboard')">
-            <img src="https://www.guanaitong.com/images/2023/public/logo.svg" alt="">
+            <img src="../../assets/logo_transparent.png" alt="" style="height: 120px; cursor: pointer;">
         </div>
         <div class="header-box">
             <el-dropdown @visible-change="arrowChange">
